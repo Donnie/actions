@@ -33,12 +33,10 @@ jobs:
 Because this action commits the downloaded workflow, and triggers the same through GH CLI, we would need the Personal Action Token which has workflow change access on the called repository
 
 ```
-    - name: Set branch name
-      run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     - name: Run private workflow
       uses: Donnie/use-private-workflow@main
       with:
-        branch: ${{ env.BRANCH }}
+        branch: ${{ github.head_ref }}
         token: ${{ secrets.GIT_PAT }}
         variables: "sayit,I say the branch name ${{ env.BRANCH }}" # important
 ```
