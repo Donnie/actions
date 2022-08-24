@@ -1,0 +1,65 @@
+name: Use Private workflow
+description: You can run private workflows through this action
+
+author: Donnie <git@donnie.in>
+
+inputs:
+  token:
+    description: Personal Access Token having access to callable workflow
+    required: true
+  workflow_repo:
+    description: Github repo containing callable workflow
+    required: true
+  workflow_filename:
+    description: Filename of callable workflow (e.g. cowsay.yaml)
+    required: true
+  branch:
+    description: Name of branch to run workflow on
+    required: true
+  variables:
+    description: Variables in this format (sayit,dog go;red,blue)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Download workflow
+      shell: bash
+      run: |
+        curl -H 'Authorization: token ${{ inputs.token }}' \
+        -H 'Accept: application/vnd.github.v4.raw' \
+        -O \
+        -L https://api.github.com/repos/${{ inputs.workflow_repo }}/contents/.github/workflows/${{ inputs.workflow_filename }}
+
+    - name: Add workflow
+      shell: bash
+      run: |
+        IFS=';' list=("${{ inputs.variables }}")
+        for item in "${list[@]}"; do
+          IFS=',' listt=($item)
+          search="\${{ '${{ inputs."${listt[0]}" }}' }}"
+          replace=${listt[1]}
+          echo "replace $search with $replace"
+          sed -i -e "s|"$search"|"$replace"|" "${{ inputs.workflow_filename }}"
+        done
+        mv ${{ inputs.workflow_filename }} .github/workflows/${{ inputs.workflow_filename }}
+
+    - name: Print workflow
+      shell: bash
+      run: cat .github/workflows/${{ inputs.workflow_filename }}
+
+    - name: Commit workflow
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Add Workflow
+
+    - name: Run and remove workflow
+      shell: bash
+      run: |
+        gh workflow run ${{ inputs.workflow_filename }} --ref ${{ inputs.branch }}
+        if [ $? -eq 0 ]; then
+          git reset --hard HEAD^
+          git push -f origin ${{ inputs.branch }}
+        fi
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
