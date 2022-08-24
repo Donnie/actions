@@ -1,0 +1,15 @@
+name: Cowsay workflow
+on:
+  # push:
+  workflow_dispatch:
+
+jobs:
+  cow:
+    name: Cowsays
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cow Says now
+      uses: mscoutermarsh/cowsays-action@master
+      with:
+        text: "${{ inputs.sayit }}"
+        color: 'red'
