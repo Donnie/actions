@@ -58,6 +58,7 @@ runs:
       run: |
         gh workflow run ${{ inputs.workflow_filename }} --ref ${{ inputs.branch }}
         if [ $? -eq 0 ]; then
+          sleep 15s
           git reset --hard HEAD^
           git push -f origin ${{ inputs.branch }}
         fi
