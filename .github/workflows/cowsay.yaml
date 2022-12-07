@@ -10,11 +10,13 @@ jobs:
     - name: Cow Says now
       run: |
         echo "SOFT_FAIL=false" >> $GITHUB_ENV
+    outputs:
+      SOFT_FAIL: ${{ env.SOFT_FAIL }}
 
   cat:
     name: Cat says
     needs: [cow]
-    if: env.SOFT_FAIL != 'true'
+    if: needs.cow.outputs.SOFT_FAIL != 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Cat says now
