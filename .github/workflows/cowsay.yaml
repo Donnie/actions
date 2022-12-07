@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Cow Says now
       run: |
-        echo "SOFT_FAIL=true" >> $GITHUB_ENV
+        echo "SOFT_FAIL=false" >> $GITHUB_ENV
 
     - name: Cat says now
       if: env.SOFT_FAIL != 'true'
