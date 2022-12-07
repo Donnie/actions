@@ -13,7 +13,8 @@ jobs:
 
   cat:
     name: Cat says
-    if: jobs.cow.outputs.SOFT_FAIL != 'true'
+    needs: [cow]
+    if: needs.cow.outputs.SOFT_FAIL != 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Cat says now
