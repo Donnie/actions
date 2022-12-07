@@ -1,7 +1,6 @@
 name: Cowsay workflow
 on:
-  # push:
-  workflow_dispatch:
+  push:
 
 jobs:
   cow:
@@ -9,7 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Cow Says now
-      uses: mscoutermarsh/cowsays-action@master
-      with:
-        text: "${{ inputs.sayit }}"
-        color: 'red'
+      run: |
+        echo "SOFT_FAIL=true" >> $GITHUB_OUTPUT
+
+  cat:
+    name: Cat says
+    if: jobs.cow.outputs.SOFT_FAIL != 'true'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cat says now
+      run: |
+        echo "Miao"
