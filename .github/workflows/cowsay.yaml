@@ -18,7 +18,7 @@ jobs:
         echo "Miao"
 
     - name: dog says now
-      if: env.SOFT_FAIL == true
+      if: ${{ env.SOFT_FAIL }}
       run: |
         echo ${{ env.SOFT_FAIL }}
         echo "Bark"
