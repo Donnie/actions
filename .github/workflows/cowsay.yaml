@@ -19,4 +19,5 @@ jobs:
     steps:
     - name: Cat says now
       run: |
+        echo ${{ needs.cow.outputs.SOFT_FAIL }}
         echo "Miao"
