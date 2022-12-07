@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Cow Says now
       run: |
-        echo "SOFT_FAIL=false" >> $GITHUB_ENV
+        echo "SOFT_FAIL=true" >> $GITHUB_ENV
     outputs:
       SOFT_FAIL: ${{ env.SOFT_FAIL }}
 
@@ -23,3 +23,13 @@ jobs:
       run: |
         echo ${{ needs.cow.outputs.SOFT_FAIL }}
         echo "Miao"
+
+  dog:
+    name: dog says
+    needs: [cow]
+    runs-on: ubuntu-latest
+    steps:
+    - name: dog says now
+      run: |
+        echo ${{ needs.cow.outputs.SOFT_FAIL }}
+        echo "Bark"
