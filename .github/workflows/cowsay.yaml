@@ -9,15 +9,17 @@ jobs:
     steps:
     - name: Cow Says now
       run: |
-        echo "SOFT_FAIL=true" >> $GITHUB_OUTPUT
+        echo "SOFT_FAIL=false" >> $GITHUB_ENV
 
   cat:
     name: Cat says
     needs: [cow]
-    if: needs.cow.outputs.SOFT_FAIL != 'true'
+    if: env.SOFT_FAIL != 'true'
     runs-on: ubuntu-latest
     steps:
     - name: Cat says now
       run: |
-        echo ${{ needs.cow.outputs.SOFT_FAIL }}
+        echo ${{ env.SOFT_FAIL }}
+        echo ${{ env }}
+        echo ${{ github }}
         echo "Miao"
